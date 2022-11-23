@@ -17,48 +17,50 @@ typedef struct
 } lista;
 
 void cria(lista *q);
-int  insereSimples(lista *q, char d[50]);
-int  insereCircular(lista *q, char d[50]);
-int  retiraSimples(lista *q, char d[50]);
-void mostraSimples(lista *q);
+int  insere(lista *q, char d[]);
+int  retira(lista *q, char d[]);
+void mostra(lista *q);
 
 lista listaEntrada, listaSaida;
-int ordem=0;
+int nos=0;
 char caractere, palavra[50]="";
 
 int main(void){
     int index;
 
     initscr();
-    cbreak();
     //Comandos presentas na lncurses que permite que a saída padrão recebe os valores char sem
     //qu o usuário pressione a tecla ENTER no teclado
     cria(&listaEntrada);
     cria(&listaSaida);
 
-    while(caractere != 13){
-        caractere = tolower(getchar());
-        if((caractere >= 97 && caractere <= 122) || caractere == 13)
-        {
-            palavra[index] = caractere;
-            index++;
-        }
-        if(caractere == 32)
-        {
-            palavra[index]='\0';
-            insereSimples(&listaEntrada, palavra);
-            while(index>=0)
+    while(caractere != 27){
+        while(caractere != 13 && caractere != 27){
+            caractere = tolower(getch());
+            if(caractere >= 97 && caractere <= 122)
             {
-                palavra[index]='\0';
-                index--;
+                palavra[index] = caractere;
+                index++;
             }
-            index=0;
+            if(caractere == 13)
+            {
+                printf("teste");
+                palavra[index]='\0';
+                insere(&listaEntrada, palavra);
+                while(index>=0)
+                {
+                    palavra[index]='\0';
+                    index--;
+                }
+                index=0;
+            }
         }
     }
-
-    mostraSimples(&listaEntrada);
-    retiraSimples(&listaEntrada, listaEntrada.inicio->nome);
-    nocbreak();
+    
+    printf("%d nos\n", nos);
+    mostra(&listaEntrada);
+    retira(&listaEntrada, listaEntrada.inicio->nome);
+    endwin();
 }
 
 
@@ -68,42 +70,21 @@ void cria(lista *q)
     q->fim = NULL;
 }
 
-int  insereSimples(lista *q, char d[50])
-{
-    struct no *aux;
-    aux = (struct no*) malloc(sizeof(struct no));
-    if (aux == NULL)
-        return 0;
-    //Caso o malloc dê errado retorne 0
-    if (q->inicio == NULL)
-    {
-        strcpy(aux->nome, d);
-        q->inicio = aux;
-        q->fim = aux;
-        return 1;
-    }
-    //Esse if checa se o nó adicionado será o primeiro e trata esse caso especial
-    strcpy(aux->nome, d);
-    q->fim->prox = aux;
-    aux->prox = NULL;
-    q->fim = aux;
-    return 1;
-    //Todos os outro nós adicionados caem nesse caso
-}
 
-int  insereCircular(lista *q, char d[50])
+int  insere(lista *q, char d[])
 {
     struct no *aux;
     aux = (struct no*) malloc(sizeof(struct no));
     if (aux == NULL)
         return 0;
     //Caso o malloc dê errado retorne 0
-    if (q->inicio == NULL)
+    if (q->inicio == NULL && q->fim == NULL)
     {
         strcpy(aux->nome, d);
         q->inicio = aux;
         q->fim = aux;
         aux->prox = aux;
+        nos++;
         return 1;
     }
     //Esse if checa se o nó adicionado será o primeiro e trata esse caso especial
@@ -111,22 +92,29 @@ int  insereCircular(lista *q, char d[50])
     q->fim->prox = aux;
     aux->prox = q->inicio;
     q->fim = aux;
+    nos++;
     return 1;
     //Todos os outro nós adicionados caem nesse caso
 }
 
-void mostraSimples(lista *q)
+void mostra(lista *q)
 {
     struct no *aux;
     aux=q->inicio;
-    while(aux!=NULL)
+    if(q->inicio == NULL)
+        printf("\nlista vazia\n");
+    if(q->inicio == q->fim)
     {
         printf("%s ", aux->nome);
-        aux = aux->prox;
+        return;
     }
+    do{
+        printf("%s\n", aux->nome);
+        aux = aux->prox;
+    }while(aux != q->inicio);
 }
 
-int retiraSimples(lista *q, char string[])
+int retira(lista *q, char string[])
 {
     struct no *aux, *anterior, *atual;
     if (q->inicio == NULL)
@@ -144,6 +132,7 @@ int retiraSimples(lista *q, char string[])
     if (q->inicio != q->fim && strcmp(string, q->inicio->nome) == 0)
     {
         aux = q->inicio;
+        q->fim->prox = q->inicio->prox;
         q->inicio = q->inicio->prox;
         free(aux);
         return 1;
@@ -156,6 +145,7 @@ int retiraSimples(lista *q, char string[])
             aux = aux->prox;
         }
         q->fim = aux;
+        q->fim->prox = q->inicio;
         aux = aux->prox;
         free(aux);
         return 1;
