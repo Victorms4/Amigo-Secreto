@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <curses.h>
 #include <string.h>
-#include <ctype.h>
+#include <time.h>
 
 struct no
 {
@@ -20,33 +20,36 @@ void cria(lista *q);
 int  insere(lista *q, char d[]);
 int  retira(lista *q, char d[]);
 void mostra(lista *q);
+void sortear(lista *e, lista *s);
 
 lista listaEntrada, listaSaida;
 int nos=0;
 char caractere, palavra[50]="";
 
 int main(void){
-    int index;
+    int index=0;
 
     initscr();
+    cbreak();
     //Comandos presentas na lncurses que permite que a saída padrão recebe os valores char sem
     //qu o usuário pressione a tecla ENTER no teclado
     cria(&listaEntrada);
     cria(&listaSaida);
 
     while(caractere != 27){
+        caractere = 0;
         while(caractere != 13 && caractere != 27){
-            caractere = tolower(getch());
-            if(caractere >= 97 && caractere <= 122)
+            caractere = getchar();
+            if((caractere >= 97 && caractere <= 122) || (caractere >= 65 && caractere <=90) || caractere == 32)
             {
                 palavra[index] = caractere;
                 index++;
             }
-            if(caractere == 13)
+            if(caractere == 13 && palavra[0] != 0)
             {
-                printf("teste");
                 palavra[index]='\0';
                 insere(&listaEntrada, palavra);
+                printf("\nAdicionado: %s\n", palavra);
                 while(index>=0)
                 {
                     palavra[index]='\0';
@@ -56,10 +59,17 @@ int main(void){
             }
         }
     }
-    
+    nocbreak();
+
     printf("%d nos\n", nos);
     mostra(&listaEntrada);
-    retira(&listaEntrada, listaEntrada.inicio->nome);
+    printf("lista de entrada\n");
+
+    sortear(&listaEntrada, &listaSaida);
+    mostra(&listaSaida);
+    printf("lista de saida\n");
+    mostra(&listaEntrada);
+
     endwin();
 }
 
@@ -168,4 +178,22 @@ int retira(lista *q, char string[])
     free(aux);
     return 1;
     //Todos os outros casos caem nesse pedaço de código
+}
+
+void sortear(lista *e, lista *s){
+    int sorteado, total=nos;
+    struct no *aux;
+    srand(time(NULL));
+    while(total > 0){
+        aux = e->inicio;
+        sorteado = rand()%total;
+        while(sorteado > 0){
+            aux = aux->prox;
+            sorteado--;
+        }
+        insere(s, aux->nome);
+        retira(e, aux->nome);
+        total--;
+    }
+    
 }
