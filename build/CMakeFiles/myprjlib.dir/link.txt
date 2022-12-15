@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib/libmyprjlib.a  CMakeFiles/myprjlib.dir/lib/funcoesEstrutura.c.o CMakeFiles/myprjlib.dir/lib/funcoesGraficas.c.o
+/usr/bin/ranlib lib/libmyprjlib.a

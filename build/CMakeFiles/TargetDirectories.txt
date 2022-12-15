@@ -1,0 +1,3 @@
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/build/CMakeFiles/myprjlib.dir

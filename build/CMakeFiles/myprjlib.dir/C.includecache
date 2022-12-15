@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/headerEstrutura.h
+
+../include/headerGraficas.h
+
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/lib/funcoesEstrutura.c
+curses.h
+-
+stdlib.h
+-
+stdio.h
+-
+time.h
+-
+string.h
+-
+headerEstrutura.h
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/lib/headerEstrutura.h
+
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/lib/funcoesGraficas.c
+stdlib.h
+-
+curses.h
+-
+string.h
+-
+locale.h
+-
+headerGraficas.h
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/lib/headerGraficas.h
+headerEstrutura.h
+/mnt/c/Users/Victor/Documents/Amigo-Secreto/lib/headerEstrutura.h
+
